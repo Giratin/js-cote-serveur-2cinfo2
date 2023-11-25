@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createGame, deleteGameById, getAllGames, getGameByDate } from "../controller/game.controller.js";
+import { acheter, createGame, deleteGameById, getAllGames, getGameByDate } from "../controller/game.controller.js";
 
 const router = Router();
 
@@ -11,7 +11,7 @@ const router = Router();
 router.route("/")
     .get(getAllGames)
     .post(createGame);
-
+router.post("/acheter/:idUser/:idGame",acheter);
 router.delete("/:id", deleteGameById);
 router.get("/:date", getGameByDate);
 

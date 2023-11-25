@@ -1,6 +1,6 @@
 import Game from "../models/game.model.js";
 
-var games = [new Game(1, "GTA 5", 2020), new Game(2, "DMC5", 2019), new Game(3, "PS6", 2020)];
+// var games = [new Game(1, "GTA 5", "this is a description", 20, 1), new Game(2, "DMC5", "this is a description", 30, 2), new Game(3, "PS6", "this is a description", 20, 1)];
 
 //[1,2,3].push(4) => [1,2,3,4]
 //[1,2,3].unshift(4) => [4,1,2,3]
@@ -11,29 +11,30 @@ var games = [new Game(1, "GTA 5", 2020), new Game(2, "DMC5", 2019), new Game(3, 
 // export default function createGame(req,res){}
 
 const createGame = (req, res) => {
-    const name = req.body.name;
-    const year = req.body.year;
+    const { title, description, quantity, price } = req.body;
 
-    let id = 1;
+    const game = new Game({ title, description, quantity, price });
 
-    if (games.length == 0) {
-        id = 1;
-    } else {
-        const lastId = games[games.length - 1].id;
-        id = lastId + 1;
-    }
-
-    const game = new Game(id, name, year);
-    games.push(game);
-
-    res.status(201).json({
-        created: true,
-        game: game
-    });
+    game.save()
+        .then((doc)=>{
+            res.json(doc)
+        })
+        .catch((exc)=>{
+            res.status(400).json({ exc })
+        })
+}
+const acheter = (req, res) => {
+    const { idUser, idGame} =req.params
 }
 
-const getAllGames = (req, res) => {
-    res.json(games);
+const getAllGames = async (req, res) => {
+    try{
+        const games = await Game.find();
+        console.log(games);
+        res.json(games);
+    }catch(exc){
+        res.status(404).json(exc)
+    }
 }
 
 const deleteGameById = (req, res) => {
@@ -63,6 +64,7 @@ export {
     getAllGames,
     deleteGameById,
     getGameByDate,
+    acheter
 }
-// ou bien 
+// ou bien
 // export const getGameByDate = (req, res) => { }
